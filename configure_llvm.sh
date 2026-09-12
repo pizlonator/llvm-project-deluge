@@ -34,10 +34,13 @@ set -x
 # build_cxx.sh, so that changing runtimes-only options (like whether the
 # runtimes are built against musl or glibc) never forces LLVM to be rebuilt.
 
+# Always build both the X86 and AArch64 backends so that the resulting compiler can
+# cross-compile for the other architecture (given that architecture's pizfix via
+# --filc-resource-dir), regardless of which architecture it was built on.
 export CMAKEOPTIONS="-S ../llvm -B . -G Ninja -DLLVM_ENABLE_PROJECTS=clang
     -DCMAKE_BUILD_TYPE=RelWithDebInfo -DLLVM_ENABLE_ASSERTIONS=ON
     -DLLVM_ENABLE_LLD=ON
-    -DLLVM_TARGETS_TO_BUILD=$LLVMARCH
+    -DLLVM_TARGETS_TO_BUILD=X86;AArch64
     -DLLVM_ENABLE_LIBXML2=OFF -DLLVM_ENABLE_LIBEDIT=OFF
     -DLLVM_ENABLE_LIBPFM=OFF -DLLVM_ENABLE_ZLIB=OFF -DLLVM_ENABLE_ZSTD=OFF
     -DLLVM_ENABLE_CURL=OFF -DLLVM_ENABLE_HTTPLIB=OFF

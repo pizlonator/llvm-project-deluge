@@ -82,6 +82,11 @@ cmake -S runtimes -B runtimes-build -G Ninja \
 (cd runtimes-build && ninja $NINJAFLAGS $NINJARUNTIMEFLAGS)
 
 ./install-cxx-$OS.sh
+# Mirror the per-target libc++ include directory (only __config_site, which is
+# architecture-independent) under the other triple so that
+# clang++ --target=$CROSSARCH-linux-gnu can find it (see package-build.sh).
+rm -rf build/include/$CROSSARCH-unknown-linux-gnu
+cp -R build/include/$ARCH-unknown-linux-gnu build/include/$CROSSARCH-unknown-linux-gnu
 ./fix_clang.sh
 
 
